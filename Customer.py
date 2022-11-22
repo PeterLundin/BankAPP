@@ -1,31 +1,38 @@
+from IdentityNumbers import IdentityNumbers
+
 class Customer:
 
-    Fullname = ""
-    _Pnr = ""
-    Accounts = []
-    Transactions = []
-  
+    fullname = None
+    _pnr = None
+    id = None
+    accounts = []
 
-    def __init__(self, fullname, pnr, id = None, accounts = None, transactions = None):
-        self.Fullname = fullname
-        self._Pnr = pnr 
+    def __init__(self, fullname, pnr, id = None):
+        self.fullname = fullname
+        self._pnr = pnr 
         
         if id is None:
-            self.Id = self.getId()
+            self.id = self.getCustomerId()
         else:
-            self.Id = id
+            self.id = id
+
+    def getPnr(self):
+        return self._pnr
+    
+    def getBalance(self):
+        balance = 0.0
+        for account in self.accounts:
+            balance += account.saldo
             
-        if not accounts is None:
-            self.Accounts = accounts
-        
-        if not transactions is None:
-            self.Transactions is None
-        
+        return balance
+    
+    def getCustomerId(self):
+        return IdentityNumbers().getCustomerId()
     
     def toString(self):
         accounts_toString = ""
-        for account in self.Accounts:
+        for account in self.accounts:
             accounts_toString += "#" + account.toString()
             
-        return f"{self.Id},{self.Fullname},{self._Pnr}{accounts_toString}"
+        return f"{self.id},{self.fullname},{self._pnr}{accounts_toString}"
         

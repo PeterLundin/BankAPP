@@ -1,18 +1,23 @@
+from IdentityNumbers import IdentityNumbers
 
 class Account:
     
+    kontotyp = ""
+    saldo = 0.0
+    kontonummer = None
+    transactions = []
+    
     def __init__(self, kontotyp = "Debit Account", saldo = 0.0, kontonummer = None):
-        self.Kontotyp = kontotyp
-        self.Saldo = saldo
+        self.kontotyp = kontotyp
+        self.saldo = saldo
         
         if kontonummer is None:
-            self.Kontonummer = self.getKontonummer()
+            self.kontonummer = self.getKontonummer()
         else:
-            self.Kontonummer = kontonummer
-            
-    
+            self.kontonummer = kontonummer
+
     def getKontonummer(self):
-        return 123456
+        return IdentityNumbers().getAccountId()
     
     def toString(self):
-        return f"{self.Kontonummer},{self.Kontotyp},{self.Saldo}"
+        return f"{self.kontonummer},{self.kontotyp},{self.saldo}"
