@@ -15,7 +15,6 @@ class Datasource:
         # Denna metod implementerar kopplingen till en generisk datasource. Returnerar 
         # en <class ‘tuple’> med en <class ‘bool’> och en <class ‘str’> t.ex., (True, 
         # “Connection successful” [, datasource namn]) 
-        
         if(path.exists(self.pathToCustomerTxt)):
             return (True, "Connection successful",  "txt", self)
         else:
@@ -23,7 +22,6 @@ class Datasource:
     
     def get_all(self):
         # Returnerar alla kunder i banken.
-        
         with open(Datasource().pathToCustomerLoadTxt, 'r',) as file:
             reader = csv.reader(file)
             customers = []

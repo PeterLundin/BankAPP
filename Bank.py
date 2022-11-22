@@ -5,7 +5,6 @@ from Customer import Customer
 from Datasource import Datasource
 from Transactions import Transaction
 
-
 class Bank:
     
     customers = []
