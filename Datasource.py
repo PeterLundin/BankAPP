@@ -22,18 +22,46 @@ class Datasource:
     
     def get_all(self):
         # Returnerar alla kunder i banken.
+        customers = []
         with open(Datasource().pathToCustomerLoadTxt, 'r',) as file:
             reader = csv.reader(file)
-            customers = []
+            
             for row in reader:
                 customers.append(self._customer_and_accounts_from_csv(row[0]))
-               
+                
             return customers
     
-    def update_by_id(id): 
+    def write_all(self, customers):
+        # skriver alla kunder i banken till fil.
+        with open(Datasource().pathToCustomerTxt, 'w', newline='') as file:
+            writer = csv.writer(file)
+            transactions = []
+            for customer in customers:
+                writer.writerow([customer.toString()])
+                transactions.append(customer.getAllTransactions())
+
+        # skriv alla transactions till fil
+        with open(Datasource().pathToTransactionsTxt, 'w', newline='') as file:
+            writer = csv.writer(file)
+            for transaction in transactions:
+                writer.writerow([transaction.toString()])
+    
+    def update_by_id(self, id, customer): 
         # Uppdaterar en kund baserad på id:n som angetts som parameter. Returnerar 
         # info om kunden som uppdaterats, eller -1 om kunden inte finns.
-        raise Exception("Ej Implementerat")
+        customers = self.get_all()
+        customer_to_update = None
+        for c in customers:
+            if c.id == id:
+                customer_to_update = c
+                
+        if customer_to_update is None:
+            return -1
+        
+        customer_to_update = customer
+        self.write_all(customers)
+        
+        return customer
     
     def find_by_id(id): 
         # Returnerar en kund baserad på id:n som angetts eller -1 om kunden in finns.

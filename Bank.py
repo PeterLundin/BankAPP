@@ -8,6 +8,7 @@ from Transactions import Transaction
 class Bank:
     
     customers = []
+    transactions = []
     
     def __init__(self):
         self._load()
@@ -113,7 +114,7 @@ class Bank:
         if account is not None:
             return f"Account type:{account.kontotyp} - Account number:{account.kontonummer} - Balance:{account.saldo}"
         
-        raise Exception("Account not found")
+        return None
     
     def deposit(self, pnr, account_id, amount):
         #Gör en insättning på kontot, returnerar True om det gick bra annars False.
@@ -121,7 +122,7 @@ class Bank:
         
         if amount > 0:
             account.saldo += amount
-            account.transactions.append(Transaction(pnr, account_id, "deposit", amount))
+            self.transactions.append(Transaction(pnr, account_id, "deposit", amount))
             
             return True
         
@@ -133,7 +134,7 @@ class Bank:
         
         if amount > 0 and amount < account.saldo:
             account.saldo -= amount
-            account.transactions.append(Transaction(pnr, account_id, "withdraw", amount))
+            self.transactions.append(Transaction(pnr, account_id, "withdraw", amount))
             return True
         
         return False
@@ -152,16 +153,19 @@ class Bank:
     def get_all_transactions_by_pnr_acc_nr(self, pnr, account_id):
         #Returnerar alla transaktioner som en kund har gjort med ett specifikt 
         #konto eller -1 om kontot inte existerar.
-        account = self.get_account_objekt(pnr, account_id)
+        if self.get_account(pnr, account_id) == None:
+            return -1
+          
+        self.transactions.sort(key=lambda x: (x.pnr, x.account_Id, x.timeStamp))
+
+        customerAccountTransactions = []
+        for transaction in self.transactions:
+            if transaction.pnr == pnr and transaction.account_Id == account_id:
+                customerAccountTransactions.append(f"Time:{transaction.timeStamp} - Account:{transaction.account_Id} - Amount:{transaction.amount} - {transaction.transaction_Type}")
+    
+        return customerAccountTransactions
         
-        if account is not None:
-            transactions = []
-            for transaction in account.transactions:
-                transactions.append(f"Time:{transaction.timeStamp} - Account:{transaction.account_Id} - Amount:{transaction.amount} - {transaction.transaction_Type}")
         
-            return transactions
-        
-        return -1
 
 
 
@@ -262,28 +266,17 @@ success = bank.withdraw('19721127', 1001, 15000.0)
 success = bank.deposit('19721127', 1001, 15000.0)
 success = bank.deposit('19721127', 1001, 10000.0)
 
+success = bank.withdraw('19740709', 1004, 10000.0)
+success = bank.withdraw('19740709', 1004, 15000.0)
+success = bank.deposit('19740709', 1005, 15000.0)
+success = bank.deposit('19740709', 1004, 10000.0)
+
+print("--- pnr 19721127 and account_id 1001 ---")
 transisar = bank.get_all_transactions_by_pnr_acc_nr('19721127', 1001)
 for trans in transisar:
     print(trans)
-
-
-'''
-for c in bank.customers:
-    print(c.toString())
     
-success = bank.change_customer_name("Snurre Sprätt", "19721127")
-print(success)
-
-success = bank.add_customer("Bruce Lee", "7212121212")
-print(success)
-success = bank.add_customer("Bruce Peter", "19721127")
-print(success)
-
-
-for c in bank.customers:
-    print(f"{c.toString()} - {c.getBalance()}")
-    
-customer = bank.get_customer('19721127')
-print(customer.getPnr())
-
-'''
+print("--- pnr 19740709 and account_id 1004 ---")
+transisar = bank.get_all_transactions_by_pnr_acc_nr('19740709', 1004)
+for trans in transisar:
+    print(trans)

@@ -5,7 +5,6 @@ class Account:
     kontotyp = ""
     saldo = 0.0
     kontonummer = None
-    transactions = []
     
     def __init__(self, kontotyp = "Debit Account", saldo = 0.0, kontonummer = None):
         self.kontotyp = kontotyp

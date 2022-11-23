@@ -26,6 +26,15 @@ class Customer:
             
         return balance
     
+    def getAllTransactions(self):
+        transactions = []
+        for account in self.accounts:
+            transactions.append(account.transactions)
+            
+        transactions.sort(key=lambda x: (x.pnr, x.account_Id, x.timeStamp))
+        
+        return transactions
+    
     def getCustomerId(self):
         return IdentityNumbers().getCustomerId()
     
