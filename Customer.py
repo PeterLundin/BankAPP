@@ -39,9 +39,9 @@ class Customer:
         return IdentityNumbers().getCustomerId()
     
     def toString(self):
-        accounts_toString = ""
+        accounts_toString = ''
         for account in self.accounts:
             accounts_toString += "#" + account.toString()
             
-        return f"{self.id},{self.fullname},{self._pnr}{accounts_toString}"
+        return f"{self.id}:{self.fullname}:{self._pnr}{accounts_toString}"
         

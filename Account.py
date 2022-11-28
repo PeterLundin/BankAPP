@@ -19,4 +19,4 @@ class Account:
         return IdentityNumbers().getAccountId()
     
     def toString(self):
-        return f"{self.kontonummer},{self.kontotyp},{self.saldo}"
+        return f"{self.kontonummer}:{self.kontotyp}:{self.saldo}"

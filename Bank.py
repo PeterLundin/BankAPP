@@ -3,31 +3,48 @@ from decimal import Decimal
 from Account import Account
 from Customer import Customer
 from Datasource import Datasource
-from Transactions import Transaction
+from Transaction import Transaction
 
 class Bank:
     
     customers = []
     transactions = []
+    connection = None
     
     def __init__(self):
         self._load()
     
     def _load(self):
         #Läser in text filen och befolkar listan som ska innehålla kunderna.
-        connection =  Datasource().datasource_conn()
-        if connection[0]:
-            self.customers = connection[3].get_all()
+        connection_info =  Datasource().datasource_conn()
+        if connection_info[0]:
+            self.connection = connection_info[3]
+            db = self.connection.get_all()
+            self.customers = db[0]
+            self.transactions = db[1]
+            
         else:
-            raise Exception(connection[1])
+            raise Exception(connection_info[1])
 
     def get_customers(self):
-        #Returnerar bankens alla kunder (personnummer och namn) 
+        #Returnerar bankens alla kunder (personnummer och namn)
         customers = []
         for customer in self.customers:
             customers.append(f"{customer.getPnr()} - {customer.fullname}")
             
         return customers
+    
+    def save_customers_and_transactions(self):
+        # skriver alla kunder (med konton) samt alla transaktioner till fil
+        self.connection.write_all(self.customers, self.transactions)
+        
+    def save_customers(self):
+        # skriver alla kunder (med konton) till fil
+        self.connection.write_customers(self.customers)
+        
+    def save_transactions(self):
+        # skriver alla transaktioner till fil
+        self.connection.write_transactions(self.transactions)
     
     def add_customer(self, name, pnr):
         #Skapar en ny kund med namn och personnummer. Kunden skapas endast om det inte 
@@ -36,6 +53,7 @@ class Bank:
         if self.get_customer_objekt(pnr) is None:
             customer = Customer(name, pnr)
             self.customers.append(customer)
+            self.save_customers()
             return True
         else:
             return False
@@ -45,12 +63,18 @@ class Bank:
         for customer in self.customers:
             if customer.getPnr() == pnr:
                 return customer
+            
+        return None
     
     def get_customer(self, pnr):
         #Returnerar information om kunden inklusive dennes konton. Första platsen i listan är 
         #förslagsvis reserverad för kundens namn och personnummer sedan följer informationen 
         #om kundens konton.
         customer = self.get_customer_objekt(pnr)
+        
+        if customer is None:
+            return None
+        
         customerInformation = []
         customerInformation.append(f"Pnr:{customer.getPnr()} - Name:{customer.fullname} - Total balance:{customer.getBalance()}")
         for account in customer.accounts:
@@ -64,6 +88,7 @@ class Bank:
         customer = self.get_customer_objekt(pnr)
         if customer is not None:
             customer.fullname = name
+            self.save_customers()
             return True
         
         return False
@@ -73,6 +98,9 @@ class Bank:
         #tas också bort och resultatet returneras. Listan som returneras ska innehålla information 
         #om alla konton som togs bort, saldot som kunden får tillbaka.
         customer = self.get_customer_objekt(pnr)
+        
+        if customer is None:
+            return None
 
         customerIndex = self.customers.index(customer)
         self.customers.pop(customerIndex)
@@ -83,6 +111,8 @@ class Bank:
         
         customerInformation.append(f"Closing balance:{customer.getBalance()}")
         
+        self.save_customers()
+        
         return customerInformation
     
     def add_account(self, pnr):
@@ -92,7 +122,8 @@ class Bank:
         account = Account()
         
         if account is not None:
-            customer.accounts.append(Account())
+            customer.accounts.append(account)
+            self.save_customers()
             return account.kontonummer
         else:
             return -1
@@ -120,9 +151,10 @@ class Bank:
         #Gör en insättning på kontot, returnerar True om det gick bra annars False.
         account = self.get_account_objekt(pnr, account_id)
         
-        if amount > 0:
+        if abs(amount) > 0:
             account.saldo += amount
             self.transactions.append(Transaction(pnr, account_id, "deposit", amount))
+            self.save_transactions()
             
             return True
         
@@ -132,9 +164,11 @@ class Bank:
         #Gör ett uttag på kontot, returnerar True om det gick bra annars False.
         account = self.get_account_objekt(pnr, account_id)
         
-        if amount > 0 and amount < account.saldo:
+        if abs(amount)  <= account.saldo:
             account.saldo -= amount
             self.transactions.append(Transaction(pnr, account_id, "withdraw", amount))
+            self.save_transactions()
+            
             return True
         
         return False
@@ -147,6 +181,8 @@ class Bank:
 
         accountIndex = customer.accounts.index(account)
         customer.accounts.pop(accountIndex)
+        
+        self.save_customers()
         
         return f"Closing balance:{account.saldo}"
     
@@ -167,10 +203,10 @@ class Bank:
         
         
 
-
-
+''' Bank tests
 
 bank = Bank()
+
 
 print("--- Get all customers ---")
 cust = bank.get_customers()
@@ -280,3 +316,6 @@ print("--- pnr 19740709 and account_id 1004 ---")
 transisar = bank.get_all_transactions_by_pnr_acc_nr('19740709', 1004)
 for trans in transisar:
     print(trans)
+    
+    
+'''
