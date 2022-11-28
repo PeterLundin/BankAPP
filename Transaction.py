@@ -7,7 +7,10 @@ class Transaction:
         self.account_Id = account_Id
         self.transaction_Type = transaction_Type
         self.amount = amount
-        self.timeStamp = datetime.now()
+        if timeStamp is None:
+            self.timeStamp = datetime.now()
+        else:
+            self.timeStamp = timeStamp
         
     def toString(self):
         return f"{self.pnr};{self.account_Id};{self.transaction_Type};{self.amount};{self.timeStamp}"

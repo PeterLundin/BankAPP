@@ -187,7 +187,8 @@ def customer_account_menu(bank, pnr, kontonummer):
     account = bank.get_account_objekt(pnr, kontonummer)
     while True:
         print('------------------------------------------------------')
-        print(f'------ Kontomeny - {pnr} - {kontonummer}: {account.saldo} ------')
+        print(f'------ Kontomeny - {pnr} -------------------')
+        print(f'------ Kontonummer: {kontonummer}: Saldo: {account.saldo} ------')
         print('------------------------------------------------------')
         print('  1 - Sätt in pengar')
         print('  2 - Ta ut pengar')

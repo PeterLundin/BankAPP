@@ -200,8 +200,7 @@ class Bank:
                 customerAccountTransactions.append(f"Time:{transaction.timeStamp} - Account:{transaction.account_Id} - Amount:{transaction.amount} - {transaction.transaction_Type}")
     
         return customerAccountTransactions
-        
-        
+
 
 ''' Bank tests
 
