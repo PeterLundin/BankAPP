@@ -14,8 +14,6 @@ def is_float(element: any):
     except ValueError:
         return False
 
-    
-    
 def main_menu(bank):
     clear_screen()
     while True:
