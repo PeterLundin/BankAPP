@@ -10,13 +10,15 @@ class Bank:
     customers = []
     transactions = []
     connection = None
+    demo_mode = False
     
-    def __init__(self):
+    def __init__(self, demo_mode = False):
+        self.demo_mode = demo_mode
         self._load()
     
     def _load(self):
         #Läser in text filen och befolkar listan som ska innehålla kunderna.
-        connection_info =  Datasource().datasource_conn()
+        connection_info =  Datasource().datasource_conn(self.demo_mode)
         if connection_info[0]:
             self.connection = connection_info[3]
             db = self.connection.get_all()

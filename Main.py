@@ -25,7 +25,7 @@ def main_menu(bank):
         print('  1 - Lista alla kunder')
         print('  2 - Ny kund')
         print('  3 - Ta bort kund')
-        print('  4 - Hantera kund uppgifter')
+        print('  4 - Kundmeny -> Hantera kund uppgifter')
         print('  0 - Avsluta')
         print('------------------------------------------------------')
         print('')
@@ -86,7 +86,7 @@ def main_menu(bank):
         
         # print('  4 - Hantera kund uppgifter')
         elif menyval.strip() == '4':
-            print('4 - Hantera kund uppgifter')
+            print('4 - Kundmeny -> Hantera kund uppgifter')
             pnr = input("Ange födelsenummer för kunden som ska hanteras (YYYYMMDDXXXX): ")
             
             customer = bank.get_customer_objekt(pnr)
@@ -111,7 +111,7 @@ def customer_menu(bank, pnr):
         print('  2 - Ändra kundnamn')
         print('  3 - Skapa konto')
         print('  4 - Avsluta konto')
-        print('  5 - Kontoinformation - insättning/uttag/transaktions historik')
+        print('  5 - Kontomeny -> insättning/uttag/transaktions historik')
         print('  0 - Tillbaks till huvudmeny')
         print('  00 - Avsluta')
         print('------------------------------------------------------')
@@ -166,7 +166,7 @@ def customer_menu(bank, pnr):
             
         # Hantera specifikt konto
         elif menyval.strip() == '5':
-            print('5 - Kontoinformation - insättning/uttag/transaktions historik')
+            print('5 - Kontomeny -> insättning/uttag/transaktions historik')
             kontonummer = input("Ange kontonummer som ska hanteras:")
             
             if bank.get_account_objekt(pnr, int(kontonummer)) is None:
@@ -248,28 +248,7 @@ def customer_account_menu(bank, pnr, kontonummer):
             quit()
         
     
+# Startar och kör programmet   
     
-    
-    
-    
-'''
-● Printa en lista med bankens kunder (personnummer, för och efternamn)
-● Lägga till en ny kund med ett unikt personnummer.
-● Ta bort en befintlig kund, befintliga konton måste också avslutas.
 
-● Ändra en kunds namn (personnummer ska inte kunna ändras).
-
-● Skapa konto (Account) till en befintlig kund, ett unikt kontonummer genereras 
-(VG)(första kontot får nummer 1001, nästa 1002 osv.).
-● Konton ska även kunna avslutas via kontonummer attributet, saldo skrivs ut
-och kontot tas bort.
-● (VG) Se alla transaktioner en kund har gjort med ett specifikt konto
-
-
-För varje kund ska man kunna utföra följande:
-● Se information om vald kund inklusive alla konton 
-(kontonummer, saldo, kontotyp).
-● Sätta in pengar på ett konto.
-● Ta ut pengar från kontot (men bara om saldot täcker uttagsbeloppet).
-'''
-main_menu(Bank())
+main_menu(Bank(demo_mode=True))
