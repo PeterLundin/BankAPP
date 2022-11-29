@@ -17,7 +17,7 @@ class IdentityNumbers:
         return self.getIdentintityNumber(2)
     
     def getIdentintityNumber(self, index):
-        # Returnerar en lista med alla id
+        # Returnerar ett uppräknat id baserat på index för det id som efterfrågas
         with open(self.pathToIndentityNumbersTxt, 'r',) as file:
             reader = csv.reader(file)
             identityNumbers = next(reader)[0].split(":")
@@ -26,7 +26,7 @@ class IdentityNumbers:
             return int(identityNumbers[index])
         
     def writeIdentintityNumbers(self, identityNumbers):
-        # Skriver id till fil igen
+        # Skriver idn till fil igen
         with open(self.pathToIndentityNumbersTxt, 'w', newline='') as file:
             writer = csv.writer(file)
             
